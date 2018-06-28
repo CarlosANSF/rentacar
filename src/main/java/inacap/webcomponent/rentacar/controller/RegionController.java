@@ -5,6 +5,7 @@
  */
 package inacap.webcomponent.rentacar.controller;
 
+import inacap.webcomponent.rentacar.model.Region;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
@@ -15,53 +16,85 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import inacap.webcomponent.rentacar.model.Region;
+import inacap.webcomponent.rentacar.model.Modelo;
 import org.springframework.http.HttpStatus;
+import inacap.webcomponent.rentacar.repository.RegionRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/region")
 public class RegionController {
     
+    @Autowired
+    private RegionRepository regionRepository;
+    
     @GetMapping()
-    public List<Region> list() {
-        return Region.region;
+    public Iterable<Region> list() {
+        return regionRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public Region get(@PathVariable String id) {
-        Region region = new Region();
+    public ResponseEntity<Region> get(@PathVariable String id) {
+        Optional<Region> cOptional = regionRepository.findById(Integer.parseInt(id));
         
-        return region.buscarRegion(Integer.parseInt(id));
+        if(cOptional.isPresent()){
+        Region cEncontrado = cOptional.get();
+        
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
-        return null;
+    public ResponseEntity<Region> put(@PathVariable String id, @RequestBody Region regionEditar) {
+        Optional<Region> cOptional = regionRepository.findById(Integer.parseInt(id));
+        
+        if(cOptional.isPresent()){
+        Region cEncontrado = cOptional.get();
+        regionEditar.setIdRegion(cEncontrado.getIdRegion());
+        
+        regionRepository.save(regionEditar);
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Region nuevoCombustible) {
+    public ResponseEntity<?> post(@RequestBody Region nuevoRegion) {
         
-        Region carroceria = new Region();
+        nuevoRegion = regionRepository.save(nuevoRegion);
+        Optional<Region> cOptional = regionRepository.findById(nuevoRegion.getIdRegion());
+        if(cOptional.isPresent()){
+        Region cEncontrado = cOptional.get();
         
-        if(!carroceria.nuevoRegion(nuevoCombustible)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-                    
-        }else
+        return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+        }else{
         
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         
-        Region region = new Region();
-        if(!region.eliminarRegion(Integer.parseInt(id))){
-            return new ResponseEntity<>(HttpStatus.OK);
-            
-        }else
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-    }
+        Optional<Region> cOptional =regionRepository.findById(Integer.parseInt(id));
+            if(cOptional.isPresent()){
+                Region cEncontrado = cOptional.get();
+                
+                regionRepository.deleteById(cEncontrado.getIdRegion());
+                
+                return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+            }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     
+    }
 }

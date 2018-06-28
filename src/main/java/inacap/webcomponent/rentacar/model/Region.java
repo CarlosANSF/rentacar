@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "region")
 public class Region {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idRegion;
     
@@ -16,7 +26,6 @@ public class Region {
     
     private String detalle;
     
-    public static ArrayList<Region> region = new ArrayList<>();
 
     public int getIdRegion() {
         return idRegion;
@@ -56,67 +65,7 @@ public class Region {
         this.detalle = detalle;
     }
     
-    public boolean nuevoRegion(Region regionnuevo){
-        
-        int id = 0;
-        if(!region.isEmpty()){
-            for(Region a : region){
-                if(a.getIdRegion()> id){
-                    id = a.getIdRegion();
-                }
-            }  
-        }
-        id++;
-        region.add(new Region(id, regionnuevo.getNombreRegion(), regionnuevo.getDetalle()));
-        return true;
-    }
     
-    
-    
-     public Region buscarRegion(int id){
-        
-        Region regionEncontrado = null;
-        
-        if(!region.isEmpty()){
-            for(Region a: region){
-                if(a.getIdRegion()==id){
-                    regionEncontrado = a;
-                }
-            }
-        }
-        return regionEncontrado;
-    }
-     
-     
-     public Region editarRegion(int id, Region regionEditar){
-        Region regionEditado = null;
-        
-        if(!region.isEmpty()){
-            for(Region a: region){
-                if(a.getIdRegion()== id){
-                    a.setNombreRegion(regionEditar.getNombreRegion());
-                    a.setDetalle(regionEditar.getDetalle());
-                    
-                    regionEditado = a;
-                }
-            }
-        }
-        return regionEditado;
-    }
-
-   public boolean eliminarRegion(int id){
-       Region regionEliminada = null;
-       
-       if(!region.isEmpty()){
-           for(Region a : region){
-               if(a.getIdRegion()==id){
-                   regionEliminada = a;
-               }
-           }
-       }
-       region.remove(regionEliminada);
-       return true;
-   }
     
     
      

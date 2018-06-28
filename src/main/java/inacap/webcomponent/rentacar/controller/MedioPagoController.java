@@ -5,6 +5,7 @@
  */
 package inacap.webcomponent.rentacar.controller;
 
+import inacap.webcomponent.rentacar.model.MedioPago;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
@@ -15,53 +16,85 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import inacap.webcomponent.rentacar.model.MedioPago;
+import inacap.webcomponent.rentacar.model.Marca;
 import org.springframework.http.HttpStatus;
+import inacap.webcomponent.rentacar.repository.MedioPagoRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/mediopago")
 public class MedioPagoController {
     
+    @Autowired
+    private MedioPagoRepository medioPagoRepository;
+    
     @GetMapping()
-    public List<MedioPago> list() {
-        return MedioPago.mediopago;
+    public Iterable<MedioPago> list() {
+        return medioPagoRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public MedioPago get(@PathVariable String id) {
-        MedioPago mediopago = new MedioPago();
+    public ResponseEntity<MedioPago> get(@PathVariable String id) {
+        Optional<MedioPago> cOptional = medioPagoRepository.findById(Integer.parseInt(id));
         
-        return mediopago.buscarMedioPago(Integer.parseInt(id));
+        if(cOptional.isPresent()){
+        MedioPago cEncontrado = cOptional.get();
+        
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
-        return null;
+    public ResponseEntity<MedioPago> put(@PathVariable String id, @RequestBody MedioPago medioPagoEditar) {
+        Optional<MedioPago> cOptional = medioPagoRepository.findById(Integer.parseInt(id));
+        
+        if(cOptional.isPresent()){
+        MedioPago cEncontrado = cOptional.get();
+        medioPagoEditar.setIdMedioPago(cEncontrado.getIdMedioPago());
+        
+        medioPagoRepository.save(medioPagoEditar);
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PostMapping
     public ResponseEntity<?> post(@RequestBody MedioPago nuevoMedioPago) {
         
-        MedioPago mediopago = new MedioPago();
+        nuevoMedioPago = medioPagoRepository.save(nuevoMedioPago);
+        Optional<MedioPago> cOptional = medioPagoRepository.findById(nuevoMedioPago.getIdMedioPago());
+        if(cOptional.isPresent()){
+        MedioPago cEncontrado = cOptional.get();
         
-        if(!mediopago.nuevoMedioPago(nuevoMedioPago)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-                    
-        }else
+        return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+        }else{
         
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         
-        MedioPago mediopago = new MedioPago();
-        if(!mediopago.eliminarMedioPago(Integer.parseInt(id))){
-            return new ResponseEntity<>(HttpStatus.OK);
-            
-        }else
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-    }
+        Optional<MedioPago> cOptional =medioPagoRepository.findById(Integer.parseInt(id));
+            if(cOptional.isPresent()){
+                MedioPago cEncontrado = cOptional.get();
+                
+                medioPagoRepository.deleteById(cEncontrado.getIdMedioPago());
+                
+                return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+            }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     
+    }
 }

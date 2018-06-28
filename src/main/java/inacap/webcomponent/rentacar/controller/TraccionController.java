@@ -18,50 +18,95 @@ import org.springframework.web.bind.annotation.PutMapping;
 import inacap.webcomponent.rentacar.model.Traccion;
 import org.springframework.http.HttpStatus;
 
+import inacap.webcomponent.rentacar.repository.TraccionRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 @RestController
 @RequestMapping("/traccion")
-public class TraccionController {
+public class TraccionController { 
+    
+    @Autowired
+    private TraccionRepository traccionRepository;
     
     @GetMapping()
-     public List<Traccion> list() {
-        return Traccion.traccion;
+    public Iterable<Traccion> list() {
+        return traccionRepository.findAll();
     }
     
     @GetMapping("/{id}")
-   public Traccion get(@PathVariable String id) {
-        Traccion traccion = new Traccion();
+    public  ResponseEntity<Traccion> get(@PathVariable String id) {
         
-        return traccion.buscarTraccion(Integer.parseInt(id));
+        Optional<Traccion> aOptional = traccionRepository.findById(Integer.parseInt(id));
+        
+        if (aOptional.isPresent()) {
+            Traccion traccionEncontrado = aOptional.get();
+            
+            return new ResponseEntity<>(traccionEncontrado, HttpStatus.FOUND);
+            
+        }else{
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
-        return null;
+    public ResponseEntity<Traccion> put(@PathVariable String id, @RequestBody Traccion traccionEditar) {
+        
+        Optional<Traccion> aOptional = traccionRepository.findById(Integer.parseInt(id));
+        
+        if (aOptional.isPresent()) {
+            Traccion traccionEncontrado = aOptional.get();
+            
+            traccionEditar.setIdTraccion(traccionEncontrado.getIdTraccion());
+            
+            traccionRepository.save(traccionEditar);
+            
+            return new ResponseEntity<>(traccionEditar, HttpStatus.OK);
+            
+        }else{
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }
     }
     
     @PostMapping
-   public ResponseEntity<?> post(@RequestBody Traccion nuevoTraccion) {
+    public ResponseEntity<?> post(@RequestBody Traccion nuevoTraccion) {
         
-        Traccion traccion = new Traccion();
+        nuevoTraccion = traccionRepository.save(nuevoTraccion);
         
-        if(!traccion.nuevoTraccion(nuevoTraccion)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-                    
-        }else
+        Optional<Traccion> aOptional = traccionRepository.findById(nuevoTraccion.getIdTraccion());
         
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        if (aOptional.isPresent()) {
+            Traccion traccionEncontrado = aOptional.get();
+            
+            return new ResponseEntity<>(traccionEncontrado, HttpStatus.CREATED);
+            
+        }else{
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            
+        }
     }
     
     @DeleteMapping("/{id}")
-   public ResponseEntity<?> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        Optional<Traccion> aOptional = traccionRepository.findById(Integer.parseInt(id));
         
-        Traccion traccion = new Traccion();
-        if(!traccion.eliminarTraccion(Integer.parseInt(id))){
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (aOptional.isPresent()) {
+            Traccion traccionEncontrado = aOptional.get();
             
-        }else
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            traccionRepository.deleteById(traccionEncontrado.getIdTraccion());
+            
+            return new ResponseEntity<>(traccionEncontrado, HttpStatus.OK);
+            
+        }else{
+            
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            
+        }   
     }
-    
 }

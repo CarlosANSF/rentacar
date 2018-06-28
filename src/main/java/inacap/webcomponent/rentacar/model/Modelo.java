@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
-public class Modelo {
+@Entity
+@Table(name = "modelo")
+public class Modelo{
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idModelo;
     
@@ -18,7 +28,6 @@ public class Modelo {
     
     private Marca marca;
     
-    public static ArrayList<Modelo> modelo = new ArrayList<>();
 
     public int getIdModelo() {
         return idModelo;
@@ -68,68 +77,7 @@ public class Modelo {
         this.marca = marca;
     }
     
-    public boolean nuevoModelo(Modelo modelonuevo){
-        
-        int id = 0;
-        if(!modelo.isEmpty()){
-            for(Modelo a : modelo){
-                if(a.getIdModelo()> id){
-                    id = a.getIdModelo();
-                }
-            }  
-        }
-        id++;
-        modelo.add(new Modelo(id, modelonuevo.getNombreModelo(), modelonuevo.getDetalle(), modelonuevo.getMarca()));
-        return true;
-    }
     
-    
-    
-     public Modelo buscarModelo(int id){
-        
-        Modelo modeloEncontrado = null;
-        
-        if(!modelo.isEmpty()){
-            for(Modelo a: modelo){
-                if(a.getIdModelo()==id){
-                    modeloEncontrado = a;
-                }
-            }
-        }
-        return modeloEncontrado;
-    }
-     
-     
-     public Modelo editarModelo(int id, Modelo modeloEditar){
-        Modelo modeloEditado = null;
-        
-        if(!modelo.isEmpty()){
-            for(Modelo a: modelo){
-                if(a.getIdModelo()== id){
-                    a.setNombreModelo(modeloEditar.getNombreModelo());
-                    a.setDetalle(modeloEditar.getDetalle());
-                    a.setMarca(modeloEditar.getMarca());
-                    
-                    modeloEditado = a;
-                }
-            }
-        }
-        return modeloEditado;
-    }
-
-   public boolean eliminarModelo(int id){
-       Modelo modeloEliminada = null;
-       
-       if(!modelo.isEmpty()){
-           for(Modelo a : modelo){
-               if(a.getIdModelo()==id){
-                   modeloEliminada = a;
-               }
-           }
-       }
-       modelo.remove(modeloEliminada);
-       return true;
-   }
     
     
     

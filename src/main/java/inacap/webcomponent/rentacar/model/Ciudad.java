@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "ciudad")
 public class Ciudad {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idCiudad;
     
@@ -18,7 +28,6 @@ public class Ciudad {
     
     private Region region;
     
-    public static ArrayList<Ciudad> ciudad = new ArrayList<>();
 
     public int getIdCiudad() {
         return idCiudad;
@@ -68,69 +77,5 @@ public class Ciudad {
         this.region = region;
     }
     
-    public boolean nuevoCiudad(Ciudad ciudadnuevo){
-        
-        int id = 0;
-        if(!ciudad.isEmpty()){
-            for(Ciudad a : ciudad){
-                if(a.getIdCiudad()> id){
-                    id = a.getIdCiudad();
-                }
-            }  
-        }
-        id++;
-        ciudad.add(new Ciudad(id, ciudadnuevo.getNombreCiudad(), ciudadnuevo.getDetalle(), ciudadnuevo.getRegion()));
-        return true;
-    }
-    
-    
-    
-     public Ciudad buscarCiudad(int id){
-        
-        Ciudad ciudadEncontrado = null;
-        
-        if(!ciudad.isEmpty()){
-            for(Ciudad a: ciudad){
-                if(a.getIdCiudad()==id){
-                    ciudadEncontrado = a;
-                }
-            }
-        }
-        return ciudadEncontrado;
-    }
-     
-     
-     public Ciudad editarCiudad(int id, Ciudad ciudadEditar){
-        Ciudad ciudadEditado = null;
-        
-        if(!ciudad.isEmpty()){
-            for(Ciudad a: ciudad){
-                if(a.getIdCiudad()== id){
-                    a.setNombreCiudad(ciudadEditar.getNombreCiudad());
-                    a.setDetalle(ciudadEditar.getDetalle());
-                    a.setRegion(ciudadEditar.getRegion());
-                    
-                    ciudadEditado = a;
-                }
-            }
-        }
-        return ciudadEditado;
-    }
-
-   public boolean eliminarCiudad(int id){
-       Ciudad ciudadEliminada = null;
-       
-       if(!ciudad.isEmpty()){
-           for(Ciudad a : ciudad){
-               if(a.getIdCiudad()==id){
-                   ciudadEliminada = a;
-               }
-           }
-       }
-       ciudad.remove(ciudadEliminada);
-       return true;
-   }
-    
-    
-    
+   
 }

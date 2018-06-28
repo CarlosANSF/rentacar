@@ -5,9 +5,9 @@
  */
 package inacap.webcomponent.rentacar.controller;
 
+import inacap.webcomponent.rentacar.model.TipoPersona;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,53 +15,84 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import inacap.webcomponent.rentacar.model.TipoPersona;
 import org.springframework.http.HttpStatus;
+import inacap.webcomponent.rentacar.repository.TipoPersonaRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/tipopersona")
 public class TipoPersonaController {
     
+    @Autowired
+    private TipoPersonaRepository tipopersonaRepository;
+    
     @GetMapping()
-    public List<TipoPersona> list() {
-        return TipoPersona.tipopersona;
+    public Iterable<TipoPersona> list() {
+        return tipopersonaRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public TipoPersona get(@PathVariable String id) {
-        TipoPersona tipopersona = new TipoPersona();
+    public ResponseEntity<TipoPersona> get(@PathVariable String id) {
+        Optional<TipoPersona> cOptional = tipopersonaRepository.findById(Integer.parseInt(id));
         
-        return tipopersona.buscarTipoPersona(Integer.parseInt(id));
+        if(cOptional.isPresent()){
+        TipoPersona cEncontrado = cOptional.get();
+        
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); 
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
-        return null;
+    public ResponseEntity<TipoPersona> put(@PathVariable String id, @RequestBody TipoPersona tipopersonaEditar) {
+        Optional<TipoPersona> cOptional = tipopersonaRepository.findById(Integer.parseInt(id));
+        
+        if(cOptional.isPresent()){
+        TipoPersona cEncontrado = cOptional.get();
+        tipopersonaEditar.setIdPersona(cEncontrado.getIdPersona());
+        
+        tipopersonaRepository.save(tipopersonaEditar);
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PostMapping
     public ResponseEntity<?> post(@RequestBody TipoPersona nuevoTipoPersona) {
         
-        TipoPersona tipopersona = new TipoPersona();
+        nuevoTipoPersona = tipopersonaRepository.save(nuevoTipoPersona);
+        Optional<TipoPersona> cOptional = tipopersonaRepository.findById(nuevoTipoPersona.getIdPersona());
+        if(cOptional.isPresent()){
+        TipoPersona cEncontrado = cOptional.get();
         
-        if(!tipopersona.nuevoTipoPersona(nuevoTipoPersona)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-                    
-        }else
+        return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+        }else{
         
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         
-        TipoPersona tipopersona = new TipoPersona();
-        if(!tipopersona.eliminarTipoPersona(Integer.parseInt(id))){
-            return new ResponseEntity<>(HttpStatus.OK);
-            
-        }else
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-    }
+        Optional<TipoPersona> cOptional = tipopersonaRepository.findById(Integer.parseInt(id));
+            if(cOptional.isPresent()){
+                TipoPersona cEncontrado = cOptional.get();
+                
+                tipopersonaRepository.deleteById(cEncontrado.getIdPersona());
+                
+                return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+            }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     
+    }
 }

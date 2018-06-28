@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "carroceria")
 public class Carroceria {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idCarroceria;
     
@@ -16,7 +26,6 @@ public class Carroceria {
     
     private String detalle;
     
-    public static ArrayList<Carroceria> carroceria = new ArrayList<>();
 
     public int getIdCarroceria() {
         return idCarroceria;
@@ -57,67 +66,7 @@ public class Carroceria {
     }
     
     
-     public boolean nuevoCarroceria(Carroceria carrocerianuevo){
-        
-        int id = 0;
-        if(!carroceria.isEmpty()){
-            for(Carroceria a : carroceria){
-                if(a.getIdCarroceria()> id){
-                    id = a.getIdCarroceria();
-                }
-            }  
-        }
-        id++;
-        carroceria.add(new Carroceria(id, carrocerianuevo.getNombreCarroceria(), carrocerianuevo.getDetalle()));
-        return true;
-    }
-    
-    
-    
-     public Carroceria buscarCarroceria(int id){
-        
-        Carroceria carroceriaEncontrado = null;
-        
-        if(!carroceria.isEmpty()){
-            for(Carroceria a: carroceria){
-                if(a.getIdCarroceria()==id){
-                    carroceriaEncontrado = a;
-                }
-            }
-        }
-        return carroceriaEncontrado;
-    }
-     
-     
-     public Carroceria editarCarroceria(int id, Carroceria carroceriaEditar){
-        Carroceria carroceriaEditado = null;
-        
-        if(!carroceria.isEmpty()){
-            for(Carroceria a: carroceria){
-                if(a.getIdCarroceria() == id){
-                    a.setNombreCarroceria(carroceriaEditar.getNombreCarroceria());
-                    a.setDetalle(carroceriaEditar.getDetalle());
-                    
-                    carroceriaEditado = a;
-                }
-            }
-        }
-        return carroceriaEditado;
-    }
-
-   public boolean eliminarCarroceria(int id){
-       Carroceria carroceriaEliminada = null;
-       
-       if(!carroceria.isEmpty()){
-           for(Carroceria a : carroceria){
-               if(a.getIdCarroceria()==id){
-                   carroceriaEliminada = a;
-               }
-           }
-       }
-       carroceria.remove(carroceriaEliminada);
-       return true;
-   }
+  
     
     
     

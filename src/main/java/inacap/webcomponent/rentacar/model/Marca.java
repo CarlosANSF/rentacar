@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "marca")
 public class Marca {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idMarca;
     
@@ -16,7 +26,6 @@ public class Marca {
     
     private String detalle;
     
-    public static ArrayList<Marca> marca = new ArrayList<>();
 
     public int getIdMarca() {
         return idMarca;
@@ -56,67 +65,7 @@ public class Marca {
         this.detalle = detalle;
     }
     
-    public boolean nuevoMarca(Marca marcanuevo){
-        
-        int id = 0;
-        if(!marca.isEmpty()){
-            for(Marca a : marca){
-                if(a.getIdMarca()> id){
-                    id = a.getIdMarca();
-                }
-            }  
-        }
-        id++;
-        marca.add(new Marca(id, marcanuevo.getNombreMarca(), marcanuevo.getDetalle()));
-        return true;
-    }
     
-    
-    
-     public Marca buscarMarca(int id){
-        
-        Marca marcaEncontrado = null;
-        
-        if(!marca.isEmpty()){
-            for(Marca a: marca){
-                if(a.getIdMarca()==id){
-                    marcaEncontrado = a;
-                }
-            }
-        }
-        return marcaEncontrado;
-    }
-     
-     
-     public Marca editarMarca(int id, Marca marcaEditar){
-        Marca marcaEditado = null;
-        
-        if(!marca.isEmpty()){
-            for(Marca a: marca){
-                if(a.getIdMarca()== id){
-                    a.setNombreMarca(marcaEditar.getNombreMarca());
-                    a.setDetalle(marcaEditar.getDetalle());
-                    
-                    marcaEditado = a;
-                }
-            }
-        }
-        return marcaEditado;
-    }
-
-   public boolean eliminarMarca(int id){
-       Marca marcaEliminada = null;
-       
-       if(!marca.isEmpty()){
-           for(Marca a : marca){
-               if(a.getIdMarca()==id){
-                   marcaEliminada = a;
-               }
-           }
-       }
-       marca.remove(marcaEliminada);
-       return true;
-   }
     
     
     

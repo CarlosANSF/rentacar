@@ -7,34 +7,39 @@ package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-/**
- *
- * @author 19168534-2
- */
+@Entity
+@Table(name = "persona")
 public class Persona {
     
-    private int idPersona;
     
-    private String rut;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
-    private String nombre;
-    
-    private String apellido;
-    
-    private Date fechaNacimiento;
-    
-    private String telefono;
-    
-    private String direccion1;
-    
-    private String direccion2;
-    
-    private Ciudad ciudad;
-    
-    private TipoPersona tipopersona;
-    
-     public static ArrayList<Persona> persona = new ArrayList<>();
+           private int idPersona;
+           
+           private String rut;
+           
+           private String nombre;
+           
+           private String apellido;
+           
+           private Date fechaNacimiento;
+           
+           private String telefono;
+           
+           private String direccion1;
+           
+           private String direccion2;
+           
+           private Ciudad ciudad;
+           
+           private TipoPersona tipoPersona;
 
     public int getIdPersona() {
         return idPersona;
@@ -108,18 +113,18 @@ public class Persona {
         this.ciudad = ciudad;
     }
 
-    public TipoPersona getTipopersona() {
-        return tipopersona;
+    public TipoPersona getTipoPersona() {
+        return tipoPersona;
     }
 
-    public void setTipopersona(TipoPersona tipopersona) {
-        this.tipopersona = tipopersona;
+    public void setTipoPersona(TipoPersona tipoPersona) {
+        this.tipoPersona = tipoPersona;
     }
 
     public Persona() {
     }
 
-    public Persona(String rut, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, Ciudad ciudad, TipoPersona tipopersona) {
+    public Persona(String rut, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, Ciudad ciudad, TipoPersona tipoPersona) {
         this.rut = rut;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -128,10 +133,10 @@ public class Persona {
         this.direccion1 = direccion1;
         this.direccion2 = direccion2;
         this.ciudad = ciudad;
-        this.tipopersona = tipopersona;
+        this.tipoPersona = tipoPersona;
     }
 
-    private Persona(int idPersona, String rut, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, Ciudad ciudad, TipoPersona tipopersona) {
+    private Persona(int idPersona, String rut, String nombre, String apellido, Date fechaNacimiento, String telefono, String direccion1, String direccion2, Ciudad ciudad, TipoPersona tipoPersona) {
         this.idPersona = idPersona;
         this.rut = rut;
         this.nombre = nombre;
@@ -141,9 +146,9 @@ public class Persona {
         this.direccion1 = direccion1;
         this.direccion2 = direccion2;
         this.ciudad = ciudad;
-        this.tipopersona = tipopersona;
+        this.tipoPersona = tipoPersona;
     }
+           
+           
     
-    
-     
 }

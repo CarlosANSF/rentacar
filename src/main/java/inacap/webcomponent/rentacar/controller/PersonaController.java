@@ -5,10 +5,9 @@
  */
 package inacap.webcomponent.rentacar.controller;
 
-import inacap.webcomponent.rentacar.model.Ciudad;
+import inacap.webcomponent.rentacar.model.Persona;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,31 +15,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import inacap.webcomponent.rentacar.model.Carroceria;
 import org.springframework.http.HttpStatus;
-import inacap.webcomponent.rentacar.repository.CiudadRepository;
+import inacap.webcomponent.rentacar.repository.PersonaRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
-@RequestMapping("/ciudad")
-public class CiudadController {
+@RequestMapping("/persona")
+public class PersonaController {
     
     @Autowired
-    private CiudadRepository ciudadRepository;
+    private PersonaRepository personaRepository;
     
     @GetMapping()
-    public Iterable<Ciudad> list() {
-        return ciudadRepository.findAll();
+    public Iterable<Persona> list() {
+        return personaRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Ciudad> get(@PathVariable String id) {
-        Optional<Ciudad> cOptional = ciudadRepository.findById(Integer.parseInt(id));
+    public ResponseEntity<Persona> get(@PathVariable String id) {
+        Optional<Persona> cOptional = personaRepository.findById(Integer.parseInt(id));
         
         if(cOptional.isPresent()){
-        Ciudad cEncontrado = cOptional.get();
+        Persona cEncontrado = cOptional.get();
         
         return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
         }else{
@@ -50,14 +48,14 @@ public class CiudadController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Ciudad> put(@PathVariable String id, @RequestBody Ciudad ciudadEditar) {
-        Optional<Ciudad> cOptional = ciudadRepository.findById(Integer.parseInt(id));
+    public ResponseEntity<Persona> put(@PathVariable String id, @RequestBody Persona personaEditar) {
+        Optional<Persona> cOptional = personaRepository.findById(Integer.parseInt(id));
         
         if(cOptional.isPresent()){
-        Ciudad cEncontrado = cOptional.get();
-        ciudadEditar.setIdCiudad(cEncontrado.getIdCiudad());
+        Persona cEncontrado = cOptional.get();
+        personaEditar.setIdPersona(cEncontrado.getIdPersona());
         
-        ciudadRepository.save(ciudadEditar);
+        personaRepository.save(personaEditar);
         return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
         }else{
         
@@ -66,12 +64,12 @@ public class CiudadController {
     }
     
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Ciudad nuevoCiudad) {
+    public ResponseEntity<?> post(@RequestBody Persona nuevoPersona) {
         
-        nuevoCiudad = ciudadRepository.save(nuevoCiudad);
-        Optional<Ciudad> cOptional = ciudadRepository.findById(nuevoCiudad.getIdCiudad());
+        nuevoPersona = personaRepository.save(nuevoPersona);
+        Optional<Persona> cOptional = personaRepository.findById(nuevoPersona.getIdPersona());
         if(cOptional.isPresent()){
-        Ciudad cEncontrado = cOptional.get();
+        Persona cEncontrado = cOptional.get();
         
         return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
         }else{
@@ -83,11 +81,11 @@ public class CiudadController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         
-        Optional<Ciudad> cOptional = ciudadRepository.findById(Integer.parseInt(id));
+        Optional<Persona> cOptional = personaRepository.findById(Integer.parseInt(id));
             if(cOptional.isPresent()){
-                Ciudad cEncontrado = cOptional.get();
+                Persona cEncontrado = cOptional.get();
                 
-                ciudadRepository.deleteById(cEncontrado.getIdCiudad());
+                personaRepository.deleteById(cEncontrado.getIdPersona());
                 
                 return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
             }else{

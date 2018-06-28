@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "tipopersona")
 public class TipoPersona {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idPersona;
     
@@ -16,7 +26,6 @@ public class TipoPersona {
     
     private String detalle;
     
-    public static ArrayList<TipoPersona> tipopersona = new ArrayList<>();
 
     public int getIdPersona() {
         return idPersona;
@@ -56,67 +65,7 @@ public class TipoPersona {
         this.detalle = detalle;
     }
     
-     public boolean nuevoTipoPersona(TipoPersona tipopersonanuevo){
-        
-        int id = 0;
-        if(!tipopersona.isEmpty()){
-            for(TipoPersona a : tipopersona){
-                if(a.getIdPersona()> id){
-                    id = a.getIdPersona();
-                }
-            }  
-        }
-        id++;
-        tipopersona.add(new TipoPersona(id, tipopersonanuevo.getNombreTipoPersona(), tipopersonanuevo.getDetalle()));
-        return true;
-    }
-    
-    
-    
-     public TipoPersona buscarTipoPersona(int id){
-        
-        TipoPersona tipopersonaEncontrado = null;
-        
-        if(!tipopersona.isEmpty()){
-            for(TipoPersona a: tipopersona){
-                if(a.getIdPersona()==id){
-                    tipopersonaEncontrado = a;
-                }
-            }
-        }
-        return tipopersonaEncontrado;
-    }
      
-     
-     public TipoPersona editarTipoPersona(int id, TipoPersona tipopersonaEditar){
-        TipoPersona tipopersonaEditado = null;
-        
-        if(!tipopersona.isEmpty()){
-            for(TipoPersona a: tipopersona){
-                if(a.getIdPersona()== id){
-                    a.setNombreTipoPersona(tipopersonaEditar.getNombreTipoPersona());
-                    a.setDetalle(tipopersonaEditar.getDetalle());
-                    
-                    tipopersonaEditado = a;
-                }
-            }
-        }
-        return tipopersonaEditado;
-    }
-
-   public boolean eliminarTipoPersona(int id){
-       TipoPersona tipopersonaEliminada = null;
-       
-       if(!tipopersona.isEmpty()){
-           for(TipoPersona a : tipopersona){
-               if(a.getIdPersona()==id){
-                   tipopersonaEliminada = a;
-               }
-           }
-       }
-       tipopersona.remove(tipopersonaEliminada);
-       return true;
-   }
     
     
     

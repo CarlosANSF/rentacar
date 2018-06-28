@@ -6,9 +6,19 @@
 package inacap.webcomponent.rentacar.model;
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "version")
 public class Version {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idVersion;
     private String nobre;
@@ -29,7 +39,6 @@ public class Version {
     private Traccion traccion;
     private Modelo modelo;
     
-    public static ArrayList<Version> version = new ArrayList<>();
 
     public Version() {
     }
@@ -219,101 +228,5 @@ public class Version {
         this.modelo = modelo;
     } 
     
-    public boolean nuevaVersion(Version nuevaVersion){
-        
-      int id = 0;
-      
-      if(!version.isEmpty()){
-          
-          for (Version ver : version) {
-              
-              if(ver.getIdVersion()>id){
-                  
-                  id=ver.getIdVersion();
-                  
-              }              
-          }
-      }
-      id++;
-      version.add(new Version(id,nuevaVersion.getNobre(),nuevaVersion.getDetalle(),nuevaVersion.getPuertas(),
-      nuevaVersion.getPasajeros(),nuevaVersion.getCilindrada(),nuevaVersion.getRendimiento(),nuevaVersion.getCapacidad(),
-      nuevaVersion.getAirbags(),nuevaVersion.isAireAcondicionado(),nuevaVersion.isCierrecentralizado(),
-      nuevaVersion.isAlzavidrios(),nuevaVersion.isCamararetro(),nuevaVersion.getCombustible(),nuevaVersion.getCarroceria(),
-      nuevaVersion.getTransmision(),nuevaVersion.getTraccion(),nuevaVersion.getModelo()));
     
-    return true;
-    }
-    
-    public Version BuscarVersion(int idBuscar){
-        
-        Version versionEncontrada = null;
-        
-        if(!version.isEmpty()){
-            
-            for (Version ver : version) {
-                
-                if(ver.getIdVersion()== idBuscar){
-                    versionEncontrada=ver;
-                }    
-            }
-        }
-        return versionEncontrada;
-    }
-    
-    public Version editarVersion(int idVersion ,Version editarVersion){
-        
-        Version versionEditada = null;
-        
-        if(!version.isEmpty()){
-            
-            for (Version ver : version) {
-                
-                if(ver.getIdVersion()==idVersion){
-                    
-                    ver.setNobre(editarVersion.getNobre());
-                    ver.setDetalle(editarVersion.getDetalle());
-                    ver.setPuertas(editarVersion.getPuertas());
-                    ver.setPasajeros(editarVersion.getPasajeros());
-                    ver.setCilindrada(editarVersion.getCilindrada());
-                    ver.setRendimiento(editarVersion.getRendimiento());
-                    ver.setCapacidad(editarVersion.getCapacidad());
-                    ver.setAirbags(editarVersion.getAirbags());
-                    ver.setAireAcondicionado(editarVersion.isAireAcondicionado());
-                    ver.setCierrecentralizado(editarVersion.isCierrecentralizado());
-                    ver.setAlzavidrios(editarVersion.isAlzavidrios());
-                    ver.setCamararetro(editarVersion.isCamararetro());
-                    ver.setCombustible(editarVersion.getCombustible());
-                    ver.setCarroceria(editarVersion.getCarroceria());
-                    ver.setTransmision(editarVersion.getTransmision());
-                    ver.setTraccion(editarVersion.getTraccion());
-                    ver.setModelo(editarVersion.getModelo());
-                   
-                    versionEditada= ver;
-                    
-                }   
-            }    
-        }
-        return versionEditada;
-    }
-    
-    public boolean eliminarVersion(int id){
-        
-        Version versionEliminar = null;
-        
-        if(!version.isEmpty()){
-            
-            for (Version ver : version) {
-                
-                if(ver.getIdVersion()==id){
-                 
-                   versionEliminar= ver; 
-                    
-                }  
-            }
-        }
-        
-        version.remove(versionEliminar);
-        
-        return true;
-    }
 }

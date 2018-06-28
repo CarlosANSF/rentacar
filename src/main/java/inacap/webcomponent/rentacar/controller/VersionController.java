@@ -5,9 +5,9 @@
  */
 package inacap.webcomponent.rentacar.controller;
 
+import inacap.webcomponent.rentacar.model.Version;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,53 +15,84 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import inacap.webcomponent.rentacar.model.Version;
 import org.springframework.http.HttpStatus;
+import inacap.webcomponent.rentacar.repository.VersionRepository;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/version")
-public class VersionController {
+public class VersionController { 
     
-     @GetMapping()
-    public List<Version> list() {
-        return Version.version;
+    @Autowired
+    private VersionRepository versionRepository;
+    
+    @GetMapping()
+    public Iterable<Version> list() {
+        return versionRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public Version get(@PathVariable String id) {
-        Version version = new Version();
+    public ResponseEntity<Version> get(@PathVariable String id) {
+        Optional<Version> cOptional = versionRepository.findById(Integer.parseInt(id));
         
-        return version.BuscarVersion(Integer.parseInt(id));
+        if(cOptional.isPresent()){
+        Version cEncontrado = cOptional.get();
+        
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Object input) {
-        return null;
+    public ResponseEntity<Version> put(@PathVariable String id, @RequestBody Version versionEditar) {
+        Optional<Version> cOptional = versionRepository.findById(Integer.parseInt(id));
+        
+        if(cOptional.isPresent()){
+        Version cEncontrado = cOptional.get();
+        versionEditar.setIdVersion(cEncontrado.getIdVersion());
+        
+        versionRepository.save(versionEditar);
+        return new ResponseEntity<>(cEncontrado, HttpStatus.FOUND);
+        }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @PostMapping
     public ResponseEntity<?> post(@RequestBody Version nuevoVersion) {
         
-        Version version = new Version();
+        nuevoVersion = versionRepository.save(nuevoVersion);
+        Optional<Version> cOptional = versionRepository.findById(nuevoVersion.getIdVersion());
+        if(cOptional.isPresent()){
+        Version cEncontrado = cOptional.get();
         
-        if(!version.nuevaVersion(nuevoVersion)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
-                    
-        }else
+        return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+        }else{
         
-        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) {
         
-        Version version = new Version();
-        if(!version.eliminarVersion(Integer.parseInt(id))){
-            return new ResponseEntity<>(HttpStatus.OK);
-            
-        }else
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-    }
+        Optional<Version> cOptional = versionRepository.findById(Integer.parseInt(id));
+            if(cOptional.isPresent()){
+                Version cEncontrado = cOptional.get();
+                
+                versionRepository.deleteById(cEncontrado.getIdVersion());
+                
+                return new ResponseEntity<>(cEncontrado, HttpStatus.OK);
+            }else{
+        
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     
+    }
 }

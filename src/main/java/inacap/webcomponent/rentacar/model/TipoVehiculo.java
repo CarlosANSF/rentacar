@@ -7,9 +7,19 @@ package inacap.webcomponent.rentacar.model;
 
 
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "tipovehiculo")
 public class TipoVehiculo {
+    
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private int idTipoVehiculo;
     
@@ -17,7 +27,6 @@ public class TipoVehiculo {
     
     private String detalle;
     
-    public static ArrayList<TipoVehiculo> tipovehiculo = new ArrayList<>();
 
     public int getIdTipoVehiculo() {
         return idTipoVehiculo;
@@ -58,67 +67,7 @@ public class TipoVehiculo {
     }
     
     
-   public boolean nuevoTipoVehiculo(TipoVehiculo tipovehiculonuevo){
-        
-        int id = 0;
-        if(!tipovehiculo.isEmpty()){
-            for(TipoVehiculo a : tipovehiculo){
-                if(a.getIdTipoVehiculo()> id){
-                    id = a.getIdTipoVehiculo();
-                }
-            }  
-        }
-        id++;
-        tipovehiculo.add(new TipoVehiculo(id, tipovehiculonuevo.getNombreTipoVehiculo(), tipovehiculonuevo.getDetalle()));
-        return true;
-    }
-    
-    
-    
-     public TipoVehiculo buscarTipoVehiculo(int id){
-        
-        TipoVehiculo tipovehiculoEncontrado = null;
-        
-        if(!tipovehiculo.isEmpty()){
-            for(TipoVehiculo a: tipovehiculo){
-                if(a.getIdTipoVehiculo()==id){
-                    tipovehiculoEncontrado = a;
-                }
-            }
-        }
-        return tipovehiculoEncontrado;
-    }
-     
-     
-     public TipoVehiculo editarTipoVehiculo(int id, TipoVehiculo tipovehiculoEditar){
-        TipoVehiculo tipovehiculoEditado = null;
-        
-        if(!tipovehiculo.isEmpty()){
-            for(TipoVehiculo a: tipovehiculo){
-                if(a.getIdTipoVehiculo() == id){
-                    a.setNombreTipoVehiculo(tipovehiculoEditar.getNombreTipoVehiculo());
-                    a.setDetalle(tipovehiculoEditar.getDetalle());
-                    
-                    tipovehiculoEditado = a;
-                }
-            }
-        }
-        return tipovehiculoEditado;
-    }
-
-   public boolean eliminarTipoVehiculo(int id){
-       TipoVehiculo tipovehiculoEliminada = null;
-       
-       if(!tipovehiculo.isEmpty()){
-           for(TipoVehiculo a : tipovehiculo){
-               if(a.getIdTipoVehiculo()==id){
-                   tipovehiculoEliminada = a;
-               }
-           }
-       }
-       tipovehiculo.remove(tipovehiculoEliminada);
-       return true;
-   }
+   
     
     
 }    
